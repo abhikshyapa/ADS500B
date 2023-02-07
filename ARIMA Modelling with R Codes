@@ -1,0 +1,518 @@
+The Random Walk Theory: An Empirical Test in NYSE Using Time Series Analysis 
+
+
+                                                                                                                                             Abhishek Ray(R22002)  
+Himanshi Sharma(R22010)
+
+
+Abstract:
+It is observed that the movement of stock prices is random in the short range around the different capital and money markets and non-random in a larger time frame. With this research, we aim to test the random walk theory through empirical evidence. The standard procedures of time series analysis were applied for the forecasting exercise of stock market data. We used two stock prices for our analysis, the closing price of AAPL and the highest price of Google. The result of our analysis shows that the random walk theory is refuted in a larger time frame, but the forecasts settle along the trend line very quickly. We performed portmanteau tests such as the Ljung-Box and Box-Pierce tests and have illustrated techniques to arrive at reasonable short-range forecasts of stock prices using standard time series methods. 
+
+
+
+ 
+1. Introduction
+There has been a lot of academic and professional interest in Random Walk Theory. The Theory implies that stock-price fluctuations are completely random and remain independent over time i.e., the fluctuations are random as the tossing of a coin. 
+
+This Theory indicates that "technical" trading rules or "charting" procedures will not result in a profit greater than market average i.e., the profits will not be greater than that obtainable with a simple "buy-and-hold" strategy. Considering this, Random Walk Theory has very high significance amongst investors, economists and financial theoreticians
+
+Purpose of this research is to test Random walk theory empirically using time series analysis on stock exchange data. A random sample of thirty stocks on the New York Stock Exchange was selected. A dataset of 2767 records was analysed to find evidence of random fluctuations of stock price. 
+
+Theory of Random Walks 
+The advocators of random-walk theory argue that the current market price of a given stock is independent of and unrelated to previous market-price patterns. This theory implies that a series of stock-price changes has no memory -that one cannot predict future market prices based on the history of price behaviour. It indicates that, the stock's real market price represents the market's best assessment of its "intrinsic" value based on all available data.
+
+The random-walk theory implies that the market assimilates new information in such a manner that any deviations about intrinsic value will be random. If, for some reason, these deviations were to become systematic, proponents of the theory would argue that there are a number of market participants who would recognize the recurring pattern of deviations and buy or sell to profit from them. The arbitrage actions of these market participants would tend to drive out any profit that was based upon non-random fluctuations about intrinsic value. 
+
+Thus, the random-walk theory implies an efficient market where there are no systematic over-valuations or under-valuations of stocks.
+
+2. Objective of Study 
+The objective of this study is to determine if there exists randomness in share price movements in the US capital market. The Randomness of the share prices has been established in multiple capital markets of the world; with this research we aim to test the same for US market through empirical evidence using time series analysis.
+
+3. Software Used
+The R Programming Language has been used throughout.
+
+4. Research Methodology
+
+4.1. Sources of Data
+Data for this study is secondary data and taken from Dow jones industrial average dataset. The Dow Jones Industrial Average is one of the most followed stock market indices by investors, and financial professional. 
+
+It measures the daily price movements of 30 large American companies on the Nasdaq and the New York Stock Exchange. The Dow Jones Industrial Average is widely viewed as a proxy for general market conditions and even the economy of the United States. 
+
+
+4.2. Population for the Study
+The population for this study is data for 30 large companies listed on the Nasdaq and NYSE. The companies are from varied sectors like banking, IT, construction, food, beverages and tobacco, etc. This Dow Jones Industrial Average dataset includes 2767 records from January 4th, 2009 to December 31st, 2019 and was downloaded from www.kaggle.com/datasets/mnassrib/dow-jones-industrial-average. 
+
+4.3. Data Analysis Technique
+ARIMA is used in this study to model the data. The portmanteau tests such as the Ljung-Box test and the Box-Pierce test are performed before coming up with short-range forecasts of stock prices using standard time series techniques.
+
+5. Data Analysis
+
+We first plot the historical closing prices of the AAPL stock. The graph we get (shown below in figure 1) is an undulating one with a linear upward trend.
+ 
+Figure 1 
+
+We then perform Runs Test to check the randomness of the data. The results are as follows:
+
+Data:  aapl$Close
+Statistic = -54.399, runs = 16, n1 = 1509, n2 = 1509, n = 3018,
+p-value < 2.2e-16
+alternative hypothesis: non-randomness
+
+Thus, with the above results we can state that randomness is refuted.
+
+The Random Walk Theory hypothesizes that share price movements are caused by random, unpredictable events. But when we have data over a considerable duration of time, there is substantial evidence against the Random Walk.
+
+Non-stationarity of the data will also be evident from the Augmented Dickey-Fuller and the KPSS tests.
+
+Augmented Dickey-Fuller Test
+Data:  aapl$Close
+Dickey-Fuller = -2.03, Lag order = 0, 
+p-value = 0.5656
+alternative hypothesis: stationary
+
+The above results of Augmented Dickey- Fuller Test shows that the original data is non-stationary, which is also evident from its graph above (Figure 1).
+
+
+KPSS Test for Level Stationarity
+Warning: p-value smaller than printed p-value
+Data:  aapl$Close
+KPSS Level = 27.839, Truncation lag parameter = 9, 
+p-value = 0.01
+
+The KPSS test also shows that the original data is non-stationary.
+
+Fitting an automated ARIMA model to the data.
+
+Series: aapl$Close 
+ARIMA(0,1,0) with drift 
+
+Coefficients:
+ drift
+      0.0525
+s.e.  0.0212
+
+sigma^2 = 1.359:  log likelihood = -4744.85
+AIC=9493.7   AICc=9493.71   BIC=9505.73
+
+We next plot the residuals from the fitted ARIMA to check if it resembles a white noise.
+ 
+ 
+Figure 2
+
+The graph above (figure 2) clearly shows the presence of heteroskedasticity among the residuals.
+
+To ensure that heteroskedasticity is indeed present, we perform a statistical test. The Breusch-Pagan test or White’s test is generally recommended for this. However, in case of a time series, McLeod Li test is the preferred approach. 
+
+The results of the McLeod Li test are shown below:
+$p.values
+[1] 3.042011e-14 1.110223e-16 0.000000e+00
+
+ 
+Figure 3
+
+
+The above results show substantial evidence of heteroskedasticity.
+
+Auto.arima function in R is expected to pick the best ARIMA model. However, in this case, the residuals clearly deviate from White Noise and therefore, we apply the Box-Cox transformation to the original data. The required lambda for the transformation is here:
+
+ 
+Figure 4
+
+lambda value = 0.3434343
+
+We fit an automated Arima model to the transformed data. The residual plot is as below in figure 5: 
+
+ 
+Figure 5
+
+The above plot of residuals shows that the problem of heteroskedasticity has been addressed. 
+
+And the fitted ARIMA is:
+Series: y 
+ARIMA(0,1,0) with drift 
+
+Coefficients:
+       drift
+      0.0034
+s.e.  0.0013
+
+sigma^2 = 0.005094:  log likelihood = 3685.32
+AIC=-7366.63   AICc=-7366.63   BIC=-7354.61
+
+
+Further to this, we plot the ACF of the residuals:
+
+ 
+Figure 6
+
+The ACF of the residuals resembles that of a White Noise.
+
+
+We also perform the portmanteau tests such as the Ljung-Box test and the Box-Pierce test. 
+
+
+The results are as follows:
+
+
+Ljung-Box test
+lb_stat lb_pvalue 
+0.5452063 0.4602831
+
+The above results of Ljung Box test shows that there is no significant autocorrelation present in the residuals.
+
+Box-Pierce test
+
+bp_stat bp_pvalue 
+0.5446648 0.4605059
+The above results of Box Pierce test also shows that there is no significant autocorrelation present in the residuals.
+
+
+Post White Noise resemblance of the residuals, we move ahead to forecast the data using the fitted ARIMA model.
+
+Below (in figure 7) is the forecast of the transformed data over 3000 time points:
+
+ 
+Figure 7
+
+
+Observation: The forecasts quickly stabilize along the trend line.
+
+Though we have forecasted over a long range, it is worth mentioning here that only short-term forecasts are meaningful for time series data. 
+
+
+We now provide the forecasts on 10 future points of the original data. We arrive at them by using the inverse Box-Cox transformation.
+
+169.3301
+169.4301
+169.5304
+169.6305
+169.7309
+169.8310
+169.9315
+170.0317
+
+
+170.1323
+170.2326
+
+ 
+
+
+As next step, we consider the high prices of the Google stock. The plot for this is shown below in figure 8.
+
+ 
+Figure 8
+
+
+We plot an automated ARIMA and assess the plot of residuals, shown below in figure 9:
+
+ 
+Figure 9
+
+The plot above in figure 9 shows the presence of some heteroskedasticity in the residuals. However, it is not as high as in the case of the AAPL stock. 
+
+Nevertheless, we apply a Box Cox transformation and fit an ARIMA to it. The new plot of residuals is shown below in figure 10.
+
+ 
+Figure 10
+
+
+From the above plot, it is evident that heteroskedasticity has increased in comparison to the previous residual plot.
+
+The heteroskedasticity issue here can perhaps be better addressed by modelling it as an autoregressive conditional heteroskedasticity and employing ARCH/GARCH models. 
+
+This is just a suggestion and if one wants to use a simpler model, one can forecast using the original ARIMA as the heteroskedasticity is not too alarming. 
+
+Thus, we come across a limitation of the ARIMA model and limitation of the traditional time series approach in general while trying to model the high prices of the Google stock.
+
+
+6. Conclusion & Future Directions 
+
+The ARIMA forecasts of the stock prices settle along the trend line very quickly. The trend component of the time series can be extrapolated over a time frame. The stock market data is random in a short range, but over a longer time frame it has a substantial trend component.
+
+Since stock market data is an example of a daily time series data, Stack LSTM models may be a better approach to model them. There in addition to the trend component, we may expect to catch hold of some more patterns present in the data. Such a work and our present work may then be presented side by side to compare the statistical and machine learning methods of time series forecasting.
+
+7. Annexure
+ 
+We have annexed below the R codes that we have used in our project.
+
+---
+title: "DJIA 30 Stock Time Series"
+output:
+word_document: default
+pdf_document: default
+date: "2022-12-02"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(readxl)
+aaba<-read.csv(file.choose(), header=TRUE
+              )
+```
+
+
+
+```{r}
+library(forecast)
+```
+
+
+```{r}
+auto.arima(aaba$High)
+```
+
+```{r}
+library(readxl)
+```
+
+```{r}
+aapl<-read.csv(file.choose(), header=TRUE)
+```
+```{r}
+plot(aapl$Open)
+plot(aapl$High)
+plot(aapl$Low)
+plot(aapl$Close)
+```
+```{r}
+auto.arima(aapl$Open)
+```
+```{r}
+acf(aapl$Open)
+```
+#We fit an automated ARIMA model.
+```{r}
+m=auto.arima(aapl$Close)
+m
+```
+```{r}
+acf(resid(m), main="acf(resid(aapl$Close))")
+```
+#We plot the residuals from the ARIMA model.
+```{r}
+plot(resid(m))
+```
+#The plot of the residuals show clear indication of heteroskedasticity
+```{r}
+bp=bptest(resid(m))
+```
+```{r}
+mcleod=McLeod.Li.test(m,gof.lag = 3)
+mcleod
+```
+#The Mcleod Li test shows the presence of significant heteroskedasticity in the data.
+```{r}
+mcleod1=McLeod.Li.test(y=aapl$Open)
+mcleod1
+```
+#Applying a variance stabilizing transformation called the Box-Cox transformation
+```{r}
+bc=boxcox(aapl$Close~1)
+```
+```{r}
+lam<-bc$x[which.max(bc$y)]
+lam
+```
+```{r}
+y<-BoxCox(aapl$Close,lam)
+```
+```{r}
+n<-auto.arima(y)
+```
+```{r}
+plot(resid(n))
+```
+#We can see from the plot of the residuals from the fit of the transformed model that there is no more autoregressive conditional heteroskedasticity present
+```{r}
+n
+```
+```{r}
+acf(resid(n))
+```
+#The ACF of the residuals resembles that of White Noise
+#Being able to remove both heteroskedasticity and autocorrelation, we move forward to forecast the data using the fitted ARIMA model
+```{r}
+autoplot(forecast(n))
+```
+```{r}
+y=forecast(n)
+y
+```
+#The above we have the forecasts for 10 time periods.
+```{r}
+plot(forecast(n))
+```
+```{r}
+autoplot(forecast(n, h= 3000))
+```
+#The ARIMA forecasts over 3000 time periods
+#Observation: The forecasts stabilize along the trend line.
+```{r}
+library(feasts)
+```
+```{r}
+ljung_box(resid(n))
+```
+#The Ljung Box test shows that there is no significant autocorrelation present in the data.
+```{r}
+box_pierce(resid(n))
+```
+#The Box Pierce test also shows that there is no significant autocorrelation present in the data.
+```{r}
+##difference the aapl$close data
+aaplClose_d1<-diff(aapl$Close, differences = 1)
+```
+```{r}
+##plot the differenced data
+plot(aaplClose_d1)
+```
+```{r}
+aaplClose_d2<-diff(aapl$Close, differences = 2)
+plot(aaplClose_d2)
+```
+```{r}
+aaplClose_d11<-diff(aapl$Close,lag = 12, differences = 1)
+plot(aaplClose_d11)
+```
+```{r}
+aaplClose_d1365<-diff(aapl$Close,lag = 365, differences = 1)
+plot(aaplClose_d1365)
+```
+```{r}
+aaplClose_d2365<-diff(, differences = 1)
+plot(aaplClose_d2365)
+```
+```{r}
+adf.test(aapl$Close,k=0)
+```
+#The  Augmented Dickey-Fuller test shows that the original data is non-stationary, which is also evident from its graph.
+```{r}
+kpss.test(aapl$Close)
+```
+#The KPSS test also shows that the original data is non-stationary.
+```{r}
+runs.test(aapl$Close)
+```
+
+---
+title: "ATRM Quants"
+author: "Abhishek Ray"
+date: "2022-12-21"
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+library(lmtest)
+library(timeSeries)
+library(tseries)
+library(forecast)
+library(readxl)
+```
+```{r}
+google<-read.csv(file.choose(),header=TRUE)
+```
+#We view the summary of the data.
+```{r}
+summary(google)
+```
+#We then plot the data.
+```{r}
+plot(google$High)
+```
+#We fit an automated ARIMA model.
+```{r}
+m=auto.arima(google$High)
+
+```
+#We plot the residuals from the automated ARIMA model.
+```{r}
+plot(resid(m))
+```
+#The plot of the residuals indicate slight heteroskedasticity.
+```{r}
+library(TSA)
+```
+
+```{r}
+mcleod=McLeod.Li.test(m,gof.lag = 4)
+mcleod
+```
+#The McLeod Li test indicates heteroskedasticity. 
+```{r}
+mcleod1=McLeod.Li.test(y=google$High)
+mcleod1
+```
+```{r}
+library(MASS)
+```
+
+#We then apply a Box Cox transformation as a variance stabilising transformation with the hope of removing heteroskedasticity in the data.
+```{r}
+bc=boxcox(google$High~1)
+```
+```{r}
+lam<-bc$x[which.max(bc$y)]
+lam
+```
+```{r}
+y<-BoxCox(google$High,lam)
+```
+#We fit an automated ARIMA to the transformed data and plot its residuals.
+```{r}
+n<-auto.arima(y)
+```
+```{r}
+plot(resid(n))
+```
+#To our surprise, the heteroskedasticity problem is enhanced.
+```{r}
+n
+```
+```{r}
+acf(resid(n))
+```
+#The ACF of the residuals do not resemble White Noise.
+```{r}
+library(LSTS)
+```
+```{r}
+library(stats)
+```
+```{r}
+library(feasts)
+```
+
+```{r}
+ljung_box(resid(n))
+```
+```{r}
+box_pierce(resid(n))
+```
+#The Ljung Box and Box Pierce test statistics indicate high autocorrelation in the original data.
+```{r}
+adf.test(google$High,k=0)
+```
+#The ADF test indicates non-stationarity of the original data.
+```{r}
+kpss.test(google$High)
+```
+#The KPSS test also indicates non-stationarity of the original data.
+```{r}
+decompose(google$High)
+```
+```{r}
+library(randtests)
+```
+#Testing randomness of the original data using the runs test
+```{r}
+runs.test(google$High)
+```
